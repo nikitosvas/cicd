@@ -46,7 +46,7 @@
       git:
         repo: https://github.com/nikitosvas/cicd.git
         dest: /app
-        version: branch_for_test
+        version: master
         accept_hostkey: yes
 
 
