@@ -37,7 +37,7 @@
 
     - name: Copy file ssh_for_vkcloud to server
       ansible.builtin.copy:
-        src: "~/.ssh/git"
+        src: "{{ lookup('env', 'PRIVATE_KEY_PATH') }}"
         dest: "~/.ssh/"
         mode: "0600"
       become: yes
