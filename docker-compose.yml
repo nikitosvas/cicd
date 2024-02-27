@@ -1,0 +1,54 @@
+version: '3'
+
+services:
+  # Сервис фронтенда, использует Dockerfile в директории ./frontend для построения
+  frontend:
+    build: ./frontend
+    restart: always
+    # Отображение порта 3000 на хосте на порт 3000 внутри контейнера
+    ports:
+      - '3000:3000'
+    volumes:
+      - /app/node_modules  # Монтирование директории node_modules из контейнера для ускорения сборки
+      - ./frontend:/app     # Монтирование кода приложения из текущей директории на хосте внутрь контейнера
+
+  # Сервис API бэкенда, использует Dockerfile в директории ./api_backend для построения
+  api:
+    build: ./api_backend
+    restart: always
+    depends_on:
+      - mysql
+    # Отображение порта 5555 на хосте на порт 5000 внутри контейнера
+    ports:
+      - '5555:5000'
+    volumes:
+      - /app/node_modules  # Монтирование директории node_modules из контейнера для ускорения сборки
+      - ./api_backend:/app  # Монтирование кода приложения из текущей директории на хосте внутрь контейнера
+    environment:
+      MYSQL_HOST: mysql
+      MYSQL_USER: root
+      MYSQL_PORT: '3306'
+      MYSQL_PASSWORD: mypassword
+      MYSQL_DB: time_db
+
+  # Сервис MySQL, использует образ MySQL
+  mysql:
+    image: mysql
+    restart: always
+    volumes:
+      - mysql_data:/var/lib/mysql  # Монтирование тома для хранения данных MySQL
+    environment:
+      MYSQL_ROOT_PASSWORD: mypassword  # Пароль для root пользователя в MySQL
+      MYSQL_DATABASE: time_db         # Имя базы данных, которая будет создана при запуске контейнера
+
+  # Сервис Adminer, использует образ Adminer
+  adminer:
+    image: adminer
+    restart: always
+    # Отображение порта 8888 на хосте на порт 8080 внутри контейнера
+    ports:
+      - '8888:8080'
+
+volumes:
+  mysql_data:  # Создание тома для хранения данных MySQL
+  # tom name insight Docker Host

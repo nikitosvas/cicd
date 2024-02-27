@@ -1,0 +1,58 @@
+---
+- name: CI/CD setting
+  hosts: UBUNTU
+  become: yes
+
+  tasks:
+    - name: Update cache
+      apt:
+        update_cache: yes
+
+    - name: Add Docker GPG apt Key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+    - name: Add Docker Repository
+      apt_repository:
+        repo: deb https://download.docker.com/linux/ubuntu focal stable
+        state: present
+    - name: Update apt and install docker-ce
+      apt:
+        name: docker-ce
+        state: latest
+        update_cache: true
+
+
+    - name: Install docker requirement
+      apt:
+        name:
+          - docker-compose
+        state: present
+
+    - name: INstall git
+      apt:
+        name:
+          - git
+        state: present
+
+    - name: Copy file ssh_for_vkcloud to server
+      ansible.builtin.copy:
+        src: "~/.ssh/git"
+        dest: "~/.ssh/"
+        mode: "0600"
+      become: yes
+
+    - name: CLone repository to dir on servers
+      git:
+        repo: https://github.com/nikitosvas/Ci_Cd_app.git
+        dest: /app
+        version: branch_for_test
+        accept_hostkey: yes
+
+
+    - name: DOcker build
+      command: docker-compose up -d
+      args:
+        chdir: /app
+
+
