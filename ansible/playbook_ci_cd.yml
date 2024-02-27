@@ -44,7 +44,7 @@
 
     - name: CLone repository to dir on servers
       git:
-        repo: https://github.com/nikitosvas/Ci_Cd_app.git
+        repo: https://github.com/nikitosvas/cicd.git
         dest: /app
         version: branch_for_test
         accept_hostkey: yes
