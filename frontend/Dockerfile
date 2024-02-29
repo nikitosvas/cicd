@@ -1,14 +1,22 @@
 FROM node:alpine
 
+
+RUN sudo git clone https://github.com/docker/buildx.git
+
+RUN sudo cd buildx && ./buildx install
+
+RUN sudo npm config set registry https://registry.npmjs.org/
+
 WORKDIR /app
 
 EXPOSE 3000
 
 COPY package*.json /app/
 
-RUN npm install
+RUN sudo npm install
 
 COPY . .
 
 CMD [ "npm", "run", "dev" ]
+
 
