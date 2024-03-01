@@ -1,9 +1,5 @@
 FROM node:alpine
 
-RUN git clone https://github.com/docker/buildx.git
-
-RUN sudo cd buildx && ./buildx install
-
 WORKDIR /app
 
 EXPOSE 3000
